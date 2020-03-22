@@ -1,0 +1,165 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta lang="pt-br">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ordenando Vetor com Maior e Menor valor com Recursividade</title>
+	<script src="Chart.js"></script>
+	<script src="utils.js"></script>
+</head>
+
+<body>
+	   
+	<div id="container" style="width: 95%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	
+	<script type="application/javascript">	
+		
+		var vetorAux = [];
+		var qtdComparacoes = 0;
+		
+		function ordenarVetor(vetorRecebido){
+
+			if (vetorRecebido.length == 0) {
+				return;	
+			}	
+			if (  vetorRecebido.length == undefined){
+				return;
+			}
+		
+			var vetorOrdenado = [];	
+			
+			if (vetorRecebido.length == 1) {
+
+				vetorOrdenado.push( vetorRecebido[0] );	
+				vetorAux.push( vetorRecebido[0] );	
+
+				vetorRecebido.splice(0,1);
+				
+				qtdComparacoes += 1;
+				
+				return vetorAux[0];	
+			}		
+		
+			var ValorMenor;
+			var valorMaior;
+			var endMenor;
+			var endMaior;
+			var posicaoX = 0;
+			var posicaoY = 0;
+			
+			endMenor = posicaoX;
+			endMaior = posicaoY;
+			while ( posicaoY < vetorRecebido.length ) {
+
+				if ( vetorRecebido[endMenor] >= vetorRecebido[posicaoY]) {
+					endMenor = posicaoY;
+				}
+				if ( vetorRecebido[endMaior] < vetorRecebido[posicaoY]) {
+
+					endMaior = posicaoY;
+				}
+				
+				qtdComparacoes += 1;
+				posicaoY = posicaoY +1;
+				
+			}
+			
+			valorMenor = vetorRecebido[endMenor];
+			valorMaior = vetorRecebido[endMaior];
+
+			if (endMenor > endMaior) {
+				
+				vetorOrdenado.unshift ( valorMenor ); 
+				vetorOrdenado.push( valorMaior );
+
+				vetorRecebido.splice(endMenor,1);
+				vetorRecebido.splice(endMaior,1);
+				
+			} else {
+
+				vetorOrdenado.push( valorMaior );
+				vetorOrdenado.unshift ( valorMenor ); 
+				
+				vetorRecebido.splice(endMaior,1);
+				vetorRecebido.splice(endMenor,1);
+
+			}
+
+			if (  vetorRecebido.length != undefined){
+
+				ordenarVetor(vetorRecebido);
+				
+				vetorAux.push( vetorOrdenado[1] );
+				vetorAux.unshift ( vetorOrdenado[0] ); 
+				
+			}
+			else{
+
+				return undefined;
+			}
+
+			return vetorAux;
+		
+		}
+		
+		function exibeGrafico(vtInicial,ddOrdenados) {		
+			 
+			var color = Chart.helpers.color;
+			var barChartData = {
+	//			labels: MONTHS,
+				labels: vtInicial,
+				datasets: [{
+					label: 'Dados Recebidos',
+					backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.red,
+					borderWidth: 1,
+					data: vtInicial,
+				}, {
+					label: 'Dados Ordenados',
+					backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+					borderColor: window.chartColors.blue,
+					borderWidth: 1,
+					data: ddOrdenados,
+				}]
+			};
+
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Ordenação de Vetor (pegando o menor e o maior elemento) usando Recursividade com Javascript'
+					}
+				}
+			});
+
+		};
+
+		const vetorInicial = [14,17,45,21,35,11,62,-17,25,13,12,6,20,3,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,25,13,12,6,20,3,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,25,13,12,6,20,3,-15,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,-9,25,13,12,6,20,3,77,19,55,-10,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,25,13,12,6,20,3,77,19,55,-5,30,9,22,4,18,1,23,10,16,2,24,7,14,7,4,1,0.3,8,17,0.1,11,15,0.8,13,0.75,12,6,3,0.9,0.2,5,9,4,10,0.4,16,2,0.5,7,14,7,4,1,0.3,8,17,0.1,11,15,0.8,13,78,-7,0.75,12,6,3,0.9,0.2,5,-20,9,4,10,0.4,16,2,0.5];
+
+//		const vetorInicial = [14,17,45,21,35,11,62,-17,25,13,12,6,20,3,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,25,13,12,6,20,3,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,25,13,12,6,20,3,-15,77,19,55,30,9,22,4,18,1,23,10,16,2,24,7,14,17,45,21,35,11,62,-9,25,13,12,6,20,3,77,19,55,-10,-8];
+//		const vetorInicial = [0.8,13,78,-7,0.75];
+	
+		var vetorOriginal = vetorInicial.slice();
+		
+		console.log(vetorInicial);
+		
+		var vetOrd = ordenarVetor(vetorOriginal);
+		
+		exibeGrafico(vetorInicial,vetOrd);
+		
+		document.write('Vetor Inicial: '+vetorInicial+'<br>Numero de Elementos: '+vetorInicial.length+'<br>'+'Comparacoes: '+qtdComparacoes+'<br>Vetor Ordenado: '+vetOrd+'<br>');	
+	</script>
+
+</body>
+</html>
